@@ -36,12 +36,14 @@ public class MainJFrame extends javax.swing.JFrame{
     public MainJFrame() {
         
         initComponents();
-        d1=new Drone(drone1Label,weatherJLabel);
-        d2=new Drone(drone2Label,weatherJLabel1);
         drone1Label.setVisible(false);
         drone2Label.setVisible(false);
         status1.setVisible(false);
         status2.setVisible(false);
+        
+        d1=new Drone(drone1Label,weatherJLabel);
+        d2=new Drone(drone2Label,weatherJLabel1);
+        
         cities=new ArrayList<Point>();
     
         initAllCities();
