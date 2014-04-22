@@ -1,0 +1,16 @@
+<?xml version="1.0"?><svg width="640" height="480" xmlns="http://www.w3.org/2000/svg">
+ <!-- Created with SVG-edit - http://svg-edit.googlecode.com/ -->
+ <defs>
+  <linearGradient id="svg_3">
+   <stop stop-color="#3f3f3f" offset="0.488281"/>
+   <stop stop-color="#c0c0c0" offset="1"/>
+  </linearGradient>
+ </defs>
+ <title>Small red Push Pin</title>
+ <g>
+  <title>Layer 1</title>
+  <path fill="#ff0000" stroke="#000000" stroke-width="3" stroke-dasharray="null" stroke-linejoin="null" stroke-linecap="null" d="m163.652359,172c-9.571762,-41.848038 -26.830078,-51.064018 -19.143524,-65.718285c7.686569,-14.654411 30.020538,-13.445831 37.851974,0c7.831451,13.445961 -11.747162,23.718849 -18.70845,65.718285z" id="svg_1"/>
+  <path fill="#FF0000" stroke="#000000" stroke-width="5" stroke-dasharray="null" stroke-linejoin="null" stroke-linecap="null" opacity="0.5" d="m190,261" id="svg_2"/>
+  <circle fill="#000000" stroke="#000000" stroke-width="3" stroke-dasharray="null" stroke-linejoin="null" stroke-linecap="null" cx="162.5" cy="115" r="5.541595" id="svg_4"/>
+ </g>
+</svg>
