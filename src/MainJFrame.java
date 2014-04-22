@@ -85,22 +85,22 @@ public class MainJFrame extends javax.swing.JFrame{
         augustaBlood.setText(p8.bloodGroup);
         Point p9=new Point("Austin",austin.getX(),austin.getY());
         autinBlood.setText(p9.bloodGroup);
-        cities.add(p1);
-        cities.add(p2);
-        cities.add(p3);
-        cities.add(p4);
-        cities.add(p5); 
-        cities.add(p6);
-        cities.add(p7);
-        cities.add(p8);
-        cities.add(p9);     
+        
+        //Add all the points to the list of cities
+        addPointsToCityList(p1,p2,p3,p4,p5,p6,p7,p8,p9);
+    }
+    
+    public void addPointsToCityList(Point... p)
+    {
+        for(Point pt : p)
+            cities.add(pt);
     }
     
     public void moveDroneInPath(ArrayList<Point> straightLine,final Drone d,
             Point source,JLabel weatherLabel, final JProgressBar fuelBar,final JLabel statusLabel) 
     {
-            final JLabel droneLabel=d.droneLabel;
-            Point destination=d.finalDestination;
+            final JLabel droneLabel = d.droneLabel;
+            Point destination = d.finalDestination;
             int x = 0, y = 0;
             droneLabel.setLocation(source.x, source.y);
             droneLabel.setVisible(true);
@@ -108,24 +108,19 @@ public class MainJFrame extends javax.swing.JFrame{
             y = source.y;
             int x1 =destination.x;
             int y1 = destination.y;
-            System.out.println("X0 Value: "+x );
-            System.out.println("Y0 Value: "+y);
-            System.out.println("X1 Value: "+x1 );
-            System.out.println("Y1 Value: "+y1);    
-            final ArrayList<Point> line=generateRandomPointBetweenEdge(x, y, x1, y1,straightLine,weatherLabel,fuelBar,statusLabel);
-            System.out.println("Line size first: "+line.size());
-
+            final ArrayList<Point> line=generateRandomPointBetweenEdge(x, y, x1, y1,
+                    straightLine,weatherLabel,fuelBar,statusLabel);
+            
             ActionListener al = new ActionListener() {
             int var=0; 
             int progress=d.fuel;
             Point p=null;
-            ArrayList<Point> deflectedPathPoints=new ArrayList<Point>();
+            ArrayList<Point> deflectedPathPoints = new ArrayList<Point>();
             int n=line.size();
             
             @Override
             public void actionPerformed(ActionEvent e) {
               boolean flag = false;  
-              boolean loopFlag=true;
               
                if(var>=n-1|| progress<=55)
                {
@@ -140,10 +135,10 @@ public class MainJFrame extends javax.swing.JFrame{
                 flag = true;
                 if(progress<=55)
                 {
-                    Point point=calculateClosestPoint(droneLabel.getX(), droneLabel.getY());
-                    deflectedPathPoints=updateLineVariable(droneLabel.getX(), 
-                    droneLabel.getY(), point,deflectedPathPoints, d);
-                    ArrayList<Point> newLine=bresenhamLine(point.x,point.y,d.finalDestination.x,d.finalDestination.y);
+                    Point point=getClosestPoint(droneLabel.getX(), droneLabel.getY());
+                    deflectedPathPoints=updateLine(droneLabel.getX(), 
+                    droneLabel.getY(), point,deflectedPathPoints);
+                    ArrayList<Point> newLine=getLineFromBresenhamAlgo(point.x,point.y,d.finalDestination.x,d.finalDestination.y);
                     moveDroneInStraightLine(deflectedPathPoints,d,point,newLine,fuelBar,statusLabel);
                 }
                }
@@ -177,7 +172,7 @@ public class MainJFrame extends javax.swing.JFrame{
             statusLabel.setText("BAD WEATHER");
             statusLabel.setForeground(Color.RED);
             statusLabel.setVisible(true);
-            deflectedPoint=drawCloud(x0,y0,x1,y1,straightLine,weatherLabel);
+            deflectedPoint = drawWeatherInfectedArea(x0,y0,x1,y1,straightLine,weatherLabel);
         }
         else
         {
@@ -185,7 +180,7 @@ public class MainJFrame extends javax.swing.JFrame{
             statusLabel.setText("WINDY");
             statusLabel.setForeground(Color.RED);
             statusLabel.setVisible(true);
-            deflectedPoint=findBox(xmin,ymin,xmax,ymax,straightLine);
+            deflectedPoint = findBoxFromPoints(xmin,ymin,xmax,ymax,straightLine);
         }
         if(deflectedPoint!=null)
         {
@@ -193,23 +188,21 @@ public class MainJFrame extends javax.swing.JFrame{
             xmax=Math.max(deflectedPoint.x, x1);
             ymin=Math.min(deflectedPoint.y,y1);
             ymax=Math.max(deflectedPoint.y,y1);
-            ArrayList<Point> pathFirst=bresenhamLine(x0, y0,deflectedPoint.x,deflectedPoint.y);
-            Point deflectedPoint2=findBox(xmin,ymin,xmax,ymax,straightLine);
+            ArrayList<Point> pathFirst=getLineFromBresenhamAlgo(x0, y0,deflectedPoint.x,deflectedPoint.y);
+            Point deflectedPoint2 = findBoxFromPoints(xmin,ymin,xmax,ymax,straightLine);
             if(deflectedPoint2!=null)
             {
-                ArrayList<Point> pathSecond=bresenhamLine(deflectedPoint.x,deflectedPoint.y, deflectedPoint2.x, deflectedPoint2.y);
-                ArrayList<Point> pathThird=bresenhamLine(deflectedPoint2.x,deflectedPoint2.y, x1, y1);
+                ArrayList<Point> pathSecond = getLineFromBresenhamAlgo(deflectedPoint.x,
+                        deflectedPoint.y, deflectedPoint2.x, deflectedPoint2.y);
+                ArrayList<Point> pathThird = getLineFromBresenhamAlgo(deflectedPoint2.x,
+                        deflectedPoint2.y, x1, y1);
                
-                straightLine=pathFirst;
+                straightLine = pathFirst;
                 for(Point p:pathSecond)
-                {
-                    straightLine.add(p);
-                }  
+                   straightLine.add(p);
+                
                 for(Point p:pathThird)
-                {   
                      straightLine.add(p);
-                }  
-  
             }
            }
        return straightLine;   
@@ -227,7 +220,7 @@ public class MainJFrame extends javax.swing.JFrame{
             return false;
     }
     
-   public Point findBox(int x0, int y0, int x1, int y1,ArrayList<Point> straightLine) {
+   public Point findBoxFromPoints(int x0, int y0, int x1, int y1,ArrayList<Point> straightLine) {
         Point p = new Point();
         if(x0 == x1 && y0 == y1)
             return null;
@@ -247,9 +240,9 @@ public class MainJFrame extends javax.swing.JFrame{
         return p;
 
     }
-    public ArrayList<Point> bresenhamLine(int x0,int y0,int x1,int y1)
+    public ArrayList<Point> getLineFromBresenhamAlgo(int x0,int y0,int x1,int y1)
     {
-        ArrayList<Point> someLine=new ArrayList<Point>();
+        ArrayList<Point> newLine = new ArrayList<Point>();
         int dx = Math.abs(x1 - x0);
         int dy = Math.abs(y1 - y0);
         
@@ -265,7 +258,7 @@ public class MainJFrame extends javax.swing.JFrame{
             p.x=x0;
             p.y=y0;
             
-            someLine.add(p);
+            newLine.add(p);
             
             if (x0 == x1 && y0 == y1) 
                 break;
@@ -282,9 +275,7 @@ public class MainJFrame extends javax.swing.JFrame{
                 y0 = y0 + sy;
             }
         }
-        
-        return someLine;
-        
+        return newLine;
     }
 
     /**
@@ -550,7 +541,7 @@ public class MainJFrame extends javax.swing.JFrame{
         notificationTextArea.setText("Destinaiton: " + destination.name + 
                 "\nBlood type required: "  + bloodRequired + "\nRunning checks...");
         //Calculate the nearest sources which have the specified blood supply
-        ArrayList<Point> nearestSources=getNearestSourceWithBlood(destination, bloodRequired);
+        ArrayList<Point> nearestSources=getNearestSourceWithRequiredBlood(destination, bloodRequired);
         
         d1.fuel = 100;
         d2.fuel = 100;
@@ -564,8 +555,8 @@ public class MainJFrame extends javax.swing.JFrame{
             d1.finalDestination=destination;
             d2.finalDestination=destination;
 
-            ArrayList<Point> straightLine1=bresenhamLine(d1.source.x,d1.source.y,destination.x,destination.y);
-            ArrayList<Point> straightLine2=bresenhamLine(d2.source.x,d2.source.y,destination.x,destination.y);
+            ArrayList<Point> straightLine1=getLineFromBresenhamAlgo(d1.source.x,d1.source.y,destination.x,destination.y);
+            ArrayList<Point> straightLine2=getLineFromBresenhamAlgo(d2.source.x,d2.source.y,destination.x,destination.y);
 
             notificationTextArea.setText(notificationTextArea.getText() + "\nDrone 1: \nSource : " +
                     nearestSources.get(0).name + "\nDrone 2:\nSource: " + nearestSources.get(1).name);
@@ -583,7 +574,7 @@ public class MainJFrame extends javax.swing.JFrame{
             d1.finalDestination=destination;
             notificationTextArea.setText(notificationTextArea.getText() + "\nDrone 1: \nSource : " +
                     nearestSources.get(0).name);
-            ArrayList<Point> straightLine1=bresenhamLine(d1.source.x,d1.source.y,destination.x,destination.y);
+            ArrayList<Point> straightLine1=getLineFromBresenhamAlgo(d1.source.x,d1.source.y,destination.x,destination.y);
             moveDroneInPath(straightLine1,d1,d1.source,d1.weatherLabel,fuel1,status1);
             
             notificationTextArea.setText(notificationTextArea.getText() + "\nReached Destination.");
@@ -596,7 +587,7 @@ public class MainJFrame extends javax.swing.JFrame{
         }
     }//GEN-LAST:event_jButton1ActionPerformed
 
-    public ArrayList<Point> getNearestSourceWithBlood(Point destination, String bloodRequired)
+    public ArrayList<Point> getNearestSourceWithRequiredBlood(Point destination, String bloodRequired)
     {
         ArrayList<Point> possibleSources=new ArrayList<Point>();
         for(Point p: cities)
@@ -611,7 +602,7 @@ public class MainJFrame extends javax.swing.JFrame{
         return possibleSources;
     }
     
-    public Point calculateClosestPoint(int x,int y){
+    public Point getClosestPoint(int x,int y){
         ArrayList<Point> distance = new ArrayList<>();
         for(Point p : cities){
             p.calculateDistance(new Point(x,y));
@@ -624,10 +615,10 @@ public class MainJFrame extends javax.swing.JFrame{
         return point;
     }
   
-    public ArrayList<Point> updateLineVariable(int x,int y,Point city,
-            ArrayList<Point> pointList,Drone d){
+    public ArrayList<Point> updateLine(int x,int y,Point city,
+            ArrayList<Point> pointList){
        
-        ArrayList<Point> pathFirst =bresenhamLine(x, y, 
+        ArrayList<Point> pathFirst =getLineFromBresenhamAlgo(x, y, 
                 city.x, city.y);
         pointList = pathFirst;
         return pointList;
@@ -669,7 +660,7 @@ public class MainJFrame extends javax.swing.JFrame{
         return y/x;
     }
 
-    private Point drawCloud(int x0,int y0,int x1,int y1,ArrayList<Point> straightLine,JLabel weatherLabel)
+    private Point drawWeatherInfectedArea(int x0,int y0,int x1,int y1,ArrayList<Point> straightLine,JLabel weatherLabel)
     {
         Point weatherPoint=selectRadomPointOnStraightLine(straightLine);  
         Point deflectedPoint=null;
