@@ -660,7 +660,8 @@ public class MainJFrame extends javax.swing.JFrame{
         return y/x;
     }
 
-    private Point drawWeatherInfectedArea(int x0,int y0,int x1,int y1,ArrayList<Point> straightLine,JLabel weatherLabel)
+    private Point drawWeatherInfectedArea(int x0,int y0,int x1,int y1,
+            ArrayList<Point> straightLine,JLabel weatherLabel)
     {
         Point weatherPoint=selectRadomPointOnStraightLine(straightLine);  
         Point deflectedPoint=null;
@@ -677,9 +678,11 @@ public class MainJFrame extends javax.swing.JFrame{
             weatherLabel.setIcon(icon);
             weatherLabel.setSize(radius*2+1, radius*2+1);
             weatherLabel.setVisible(true);
-            weatherLabel.setLocation(new java.awt.Point(weatherPoint.x - radius/2, weatherPoint.y - radius/2));
+            weatherLabel.setLocation(new java.awt.Point(weatherPoint.x - radius/2,
+                    weatherPoint.y - radius/2));
         }
-            deflectedPoint=findDeflectedUsingWeatherPoint(x0,y0,x1,y1,weatherPoint,radius);
+            deflectedPoint=findDeflectedUsingWeatherPoint(x0,y0,x1,y1,
+                    weatherPoint,radius);
         }
         else
         {
@@ -705,7 +708,8 @@ public class MainJFrame extends javax.swing.JFrame{
 
     public void moveDroneInStraightLine(
             final ArrayList<Point> deflectedPathPoints,final Drone d,
-            final Point intermediatePoint,final ArrayList<Point> line,final JProgressBar fuelBar,final JLabel statusLabel){
+            final Point intermediatePoint,final ArrayList<Point> line,
+            final JProgressBar fuelBar,final JLabel statusLabel){
           ActionListener al = new ActionListener() {
             int var = 0;
             int n = deflectedPathPoints.size();
