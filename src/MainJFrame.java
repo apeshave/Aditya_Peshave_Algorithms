@@ -145,10 +145,7 @@ public class MainJFrame extends javax.swing.JFrame{
                     moveDroneInStraightLine(deflectedPathPoints,d,point,newLine,fuelBar,statusLabel);
                 }
                }
-               
                if(!flag){
-                    System.out.println("Var "+ var);
-                    System.out.println("N "+ n);
                     Point p=line.get(var);
                     droneLabel.setLocation(p.x, p.y);
                     fuelBar.setStringPainted(true);
@@ -201,8 +198,6 @@ public class MainJFrame extends javax.swing.JFrame{
                 ArrayList<Point> pathSecond=bresenhamLine(deflectedPoint.x,deflectedPoint.y, deflectedPoint2.x, deflectedPoint2.y);
                 ArrayList<Point> pathThird=bresenhamLine(deflectedPoint2.x,deflectedPoint2.y, x1, y1);
                
-                System.out.println("First deflected: x: "+deflectedPoint.x+" y: "+deflectedPoint.y);
-                System.out.println("Second deflected: x: "+deflectedPoint2.x+" y: "+deflectedPoint2.y);
                 straightLine=pathFirst;
                 for(Point p:pathSecond)
                 {
@@ -221,9 +216,13 @@ public class MainJFrame extends javax.swing.JFrame{
     public boolean isWeather()
     {
         Random r=new Random();
-        int value=r.nextInt(10);
-        return value<=7?true:false;
+        //setting the probability to 70% for weather
         
+        int value=r.nextInt(10);
+        if(value <= 7)
+            return true;
+        else
+            return false;
     }
     
    public Point findBox(int x0, int y0, int x1, int y1,ArrayList<Point> straightLine) {
@@ -729,26 +728,20 @@ public class MainJFrame extends javax.swing.JFrame{
                      fuelBar.setValue(d.fuel);
                     flag = true;
                     d.isFuelLow=false;
-                    System.out.println("Reached the Intermediate point");
+                     
                     moveDroneInPath(line, d,intermediatePoint,d.weatherLabel,fuelBar,statusLabel);
                 }
                 if (!flag) {
-                    System.out.println("Var " + var);
-                    System.out.println("N " + n);
                     p = deflectedPathPoints.get(var);        
-                    d.droneLabel.setLocation(p.x, p.y);
-                    System.out.println("X "+p.x + "Y "+p.y);
-                    
+                    d.droneLabel.setLocation(p.x, p.y); 
                     var += 30;
                     fuelBar.setStringPainted(true);
                     fuelBar.setValue(progress);
                     d.fuel=progress;
                     progress-=3;            
                 }
-
             }
         };
-
         Timer t = new Timer(1000, al);
         t.start();
     }
